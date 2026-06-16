@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalendarz Meczów</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial;
+    background:#e5e7eb;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    background:#1e3a8a;
+    color:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+ul{
+    list-style:none;
+    padding-left:0;
+}
+
+li{
+    padding:10px;
+    margin:5px 0;
+    background:#f8fafc;
+    border-left:5px solid #2563eb;
+    border-radius:8px;
+}
+
+.small{
+    color:#64748b;
+    font-size:14px;
+    margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>📅 Kalendarz Meczów</h1>
+
+<div class="card">
+
+    <h2>⚙️ Generowanie terminarza</h2>
+
+    <button onclick="generateSchedule()">
+        🔄 Generuj kalendarz (każdy z każdym)
+    </button>
+
+    <p class="small">
+        Kalendarz tworzy mecze na podstawie zapisanych klubów w systemie.
+    </p>
+
+</div>
+
+<div class="card">
+
+    <h2>📆 Terminarz</h2>
+
+    <ul id="schedule"></ul>
+
+</div>
+
+</div>
+
+<script>
+
+// 🔥 PRZYKŁADOWE KLUBY (możesz podłączyć localStorage później)
+let teams = JSON.parse(localStorage.getItem("teams")) || [];
+
+function generateSchedule(){
+
+    const list =
+    document.getElementById("schedule");
+
+    list.innerHTML = "";
+
+    if(teams.length < 2){
+        alert("Dodaj minimum 2 kluby w systemie tabeli!");
+        return;
+    }
+
+    let matches = [];
+
+    // każdy z każdym
+    for(let i=0;i<teams.length;i++){
+        for(let j=i+1;j<teams.length;j++){
+
+            matches.push(
+                `${teams[i].name} vs ${teams[j].name}`
+            );
+        }
+    }
+
+    matches.forEach((m,index)=>{
+
+        list.innerHTML +=
+        `<li>⚽ Kolejka ${index+1}: ${m}</li>`;
+    });
+}
+
+</script>
+
+</body>
+</html>
