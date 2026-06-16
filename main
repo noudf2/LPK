@@ -1,0 +1,109 @@
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strona Główna - Liga Manager</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg, #1e3a8a, #64748b);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    text-align:center;
+    width:90%;
+    max-width:700px;
+}
+
+h1{
+    color:white;
+    margin-bottom:30px;
+    font-size:40px;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+button{
+    padding:25px;
+    font-size:18px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    background:white;
+    color:#1e3a8a;
+    font-weight:bold;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover{
+    transform:scale(1.05);
+    background:#e0e7ff;
+}
+
+.footer{
+    margin-top:30px;
+    color:white;
+    opacity:0.8;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>⚽ Liga Manager</h1>
+
+    <div class="menu">
+
+        <button onclick="go('kalendarz.html')">
+            📅 Kalendarz
+        </button>
+
+        <button onclick="go('tabela.html')">
+            📊 Tabela
+        </button>
+
+        <button onclick="go('social.html')">
+            📱 Social Media
+        </button>
+
+        <button onclick="go('sponsorzy.html')">
+            🤝 Sponsorzy
+        </button>
+
+    </div>
+
+    <div class="footer">
+        System zarządzania ligą piłkarską
+    </div>
+
+</div>
+
+<script>
+function go(page){
+    window.location.href = page;
+}
+</script>
+
+</body>
+</html>
+```
