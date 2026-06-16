@@ -3,18 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strona Główna - Liga Manager</title>
+<title>Liga Manager</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
 body{
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg, #1e3a8a, #64748b);
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#1e3a8a,#64748b);
     height:100vh;
     display:flex;
     justify-content:center;
@@ -23,14 +18,12 @@ body{
 
 .container{
     text-align:center;
-    width:90%;
-    max-width:700px;
 }
 
 h1{
     color:white;
+    font-size:42px;
     margin-bottom:30px;
-    font-size:40px;
 }
 
 .menu{
@@ -39,31 +32,32 @@ h1{
     gap:20px;
 }
 
-button{
+a.button{
+    display:flex;
+    justify-content:center;
+    align-items:center;
     padding:25px;
-    font-size:18px;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
     background:white;
     color:#1e3a8a;
+    text-decoration:none;
     font-weight:bold;
+    font-size:18px;
+    border-radius:15px;
     transition:0.3s;
     box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-button:hover{
+a.button:hover{
     transform:scale(1.05);
     background:#e0e7ff;
 }
 
-.footer{
-    margin-top:30px;
+#status{
+    margin-top:20px;
     color:white;
-    opacity:0.8;
+    font-size:14px;
 }
 </style>
-
 </head>
 <body>
 
@@ -72,35 +66,48 @@ button:hover{
     <h1>⚽ Liga Manager</h1>
 
     <div class="menu">
-
-        <button onclick="go('kalendarz.html')">
-            📅 Kalendarz
-        </button>
-
-        <button onclick="go('tabela.html')">
-            📊 Tabela
-        </button>
-
-        <button onclick="go('social.html')">
-            📱 Social Media
-        </button>
-
-        <button onclick="go('sponsorzy.html')">
-            🤝 Sponsorzy
-        </button>
-
+        <a class="button" href="kalendarz.html">📅 Kalendarz</a>
+        <a class="button" href="tabela.html">📊 Tabela</a>
+        <a class="button" href="social.html">📱 Social Media</a>
+        <a class="button" href="sponsorzy.html">🤝 Sponsorzy</a>
     </div>
 
-    <div class="footer">
-        System zarządzania ligą piłkarską
-    </div>
+    <div id="status">Łączenie z bazą...</div>
 
 </div>
 
-<script>
-function go(page){
-    window.location.href = page;
+<!-- 🔥 FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔧 TWOJA KONFIGURACJA
+const firebaseConfig = {
+  apiKey: "AIzaSyCCAi0uJeOCv9TDz2vEaX4GM07aeXiq41o",
+  authDomain: "liga-polskich-klubow.firebaseapp.com",
+  projectId: "liga-polskich-klubow",
+  storageBucket: "liga-polskich-klubow.firebasestorage.app",
+  messagingSenderId: "144909575974",
+  appId: "1:144909575974:web:1d4d79b565ba9f3ffec3e7",
+  measurementId: "G-GRRGK4GRQJ"
+};
+
+// init
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 📦 przykładowa kolekcja (np. drużyny)
+const teamsRef = collection(db, "teams");
+
+// 📡 test połączenia z bazą
+async function checkDB(){
+  const snap = await getDocs(teamsRef);
+
+  document.getElementById("status").innerText =
+    "🔥 Baza działa! Liczba drużyn: " + snap.size;
 }
+
+checkDB();
 </script>
 
 </body>
