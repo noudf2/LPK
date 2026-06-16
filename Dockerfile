@@ -1,1 +1,1 @@
-touch Dockerfile
+docker build .
