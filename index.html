@@ -1,12 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liga Polskich Klubów</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>Strona Główna - Liga Manager</title>
 
 <style>
 *{
@@ -17,476 +14,94 @@
 
 body{
     font-family:Arial,sans-serif;
-    background:#e5e7eb;
-    padding:20px;
+    background:linear-gradient(135deg, #1e3a8a, #64748b);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .container{
-    max-width:1200px;
-    margin:auto;
+    text-align:center;
+    width:90%;
+    max-width:700px;
 }
 
 h1{
-    text-align:center;
-    background:#2563eb;
     color:white;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
+    margin-bottom:30px;
+    font-size:40px;
 }
 
-.card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    box-shadow:0 4px 10px rgba(0,0,0,.1);
-    border-top:5px solid #64748b;
-}
-
-h2{
-    color:#334155;
-    margin-bottom:15px;
-}
-
-input,
-select,
-button{
-    padding:10px;
-    margin:5px;
-    border-radius:8px;
-    border:1px solid #cbd5e1;
+.menu{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
 }
 
 button{
-    background:#2563eb;
-    color:white;
+    padding:25px;
+    font-size:18px;
     border:none;
+    border-radius:15px;
     cursor:pointer;
+    background:white;
+    color:#1e3a8a;
     font-weight:bold;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 button:hover{
-    background:#1d4ed8;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-th,td{
-    border:1px solid #d1d5db;
-    padding:10px;
-    text-align:center;
-}
-
-tbody tr:nth-child(even){
-    background:#f8fafc;
-}
-
-tbody tr:hover{
-    background:#dbeafe;
-}
-
-#matchList{
-    margin-top:10px;
-    padding-left:20px;
+    transform:scale(1.05);
+    background:#e0e7ff;
 }
 
 .footer{
-    text-align:center;
-    color:#64748b;
-    margin-top:20px;
+    margin-top:30px;
+    color:white;
+    opacity:0.8;
 }
 </style>
+
 </head>
 <body>
 
 <div class="container">
 
-<h1 id="leagueTitle">🏆 Liga Polskich Klubów</h1>
+    <h1>⚽ Liga Manager</h1>
 
-<div class="card">
-    <h2>⚙️ Ustawienia ligi</h2>
+    <div class="menu">
 
-    <input
-        type="text"
-        id="leagueName"
-        value="Liga Polskich Klubów"
-        placeholder="Podaj nazwę ligi">
+        <button onclick="go('kalendarz.html')">
+            📅 Kalendarz
+        </button>
 
-    <button onclick="setLeagueName()">
-        🏆 Zmień nazwę ligi
-    </button>
-</div>
+        <button onclick="go('tabela.html')">
+            📊 Tabela
+        </button>
 
-<div class="card">
-    <h2>🏟️ Zarządzanie klubami</h2>
+        <button onclick="go('social.html')">
+            📱 Social Media
+        </button>
 
-    <input
-        type="text"
-        id="teamName"
-        placeholder="Nazwa klubu">
+        <button onclick="go('sponsorzy.html')">
+            🤝 Sponsorzy
+        </button>
 
-    <button onclick="addTeam()">
-        ➕ Dodaj klub
-    </button>
+    </div>
 
-    <br><br>
-
-    <select id="removeTeam"></select>
-
-    <button onclick="removeTeam()">
-        ❌ Usuń klub
-    </button>
-</div>
-
-<div class="card">
-    <h2>⚽ Dodaj wynik meczu</h2>
-
-    <select id="homeTeam"></select>
-
-    <input
-        type="number"
-        id="homeGoals"
-        min="0"
-        value="0">
-
-    vs
-
-    <input
-        type="number"
-        id="awayGoals"
-        min="0"
-        value="0">
-
-    <select id="awayTeam"></select>
-
-    <button onclick="addMatch()">
-        ⚽ Zapisz wynik
-    </button>
-
-    <h3 style="margin-top:20px;">
-        📋 Rozegrane mecze
-    </h3>
-
-    <ul id="matchList"></ul>
-</div>
-
-<div class="card" id="tableContainer">
-
-    <h2 id="tableTitle">
-        📊 Tabela Ligowa - Liga Polskich Klubów
-    </h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Drużyna</th>
-                <th>M</th>
-                <th>Z</th>
-                <th>R</th>
-                <th>P</th>
-                <th>BR+</th>
-                <th>BR-</th>
-                <th>RB</th>
-                <th>PKT</th>
-            </tr>
-        </thead>
-
-        <tbody id="leagueTable"></tbody>
-    </table>
-
-    <br>
-
-    <button onclick="saveTableAsPNG()">
-        📸 Zapisz tabelę jako PNG
-    </button>
-
-</div>
-
-<div class="footer">
-    ⚽ Liga Manager 2026
-</div>
+    <div class="footer">
+        System zarządzania ligą piłkarską
+    </div>
 
 </div>
 
 <script>
-
-let teams = [];
-
-function setLeagueName(){
-
-    const name =
-    document.getElementById("leagueName")
-    .value
-    .trim();
-
-    if(name === "") return;
-
-    document.getElementById(
-        "leagueTitle"
-    ).innerHTML =
-    "🏆 " + name;
-
-    document.getElementById(
-        "tableTitle"
-    ).innerHTML =
-    "📊 Tabela Ligowa - " + name;
-
-    document.title = name;
+function go(page){
+    window.location.href = page;
 }
-
-function addTeam(){
-
-    const input =
-    document.getElementById("teamName");
-
-    const name =
-    input.value.trim();
-
-    if(name === ""){
-        alert("Podaj nazwę klubu!");
-        return;
-    }
-
-    teams.push({
-        name:name,
-        played:0,
-        won:0,
-        draw:0,
-        lost:0,
-        gf:0,
-        ga:0,
-        points:0
-    });
-
-    input.value = "";
-
-    updateSelects();
-    updateTable();
-}
-
-function removeTeam(){
-
-    const index =
-    document.getElementById(
-        "removeTeam"
-    ).value;
-
-    if(index === "") return;
-
-    if(confirm("Czy usunąć klub?")){
-
-        teams.splice(index,1);
-
-        updateSelects();
-        updateTable();
-    }
-}
-
-function updateSelects(){
-
-    const home =
-    document.getElementById(
-        "homeTeam"
-    );
-
-    const away =
-    document.getElementById(
-        "awayTeam"
-    );
-
-    const remove =
-    document.getElementById(
-        "removeTeam"
-    );
-
-    home.innerHTML = "";
-    away.innerHTML = "";
-    remove.innerHTML = "";
-
-    teams.forEach((team,index)=>{
-
-        home.innerHTML +=
-        `<option value="${index}">
-            ${team.name}
-        </option>`;
-
-        away.innerHTML +=
-        `<option value="${index}">
-            ${team.name}
-        </option>`;
-
-        remove.innerHTML +=
-        `<option value="${index}">
-            ${team.name}
-        </option>`;
-    });
-}
-
-function addMatch(){
-
-    if(teams.length < 2){
-        alert("Dodaj minimum 2 kluby!");
-        return;
-    }
-
-    const homeIndex =
-    parseInt(
-        document.getElementById(
-            "homeTeam"
-        ).value
-    );
-
-    const awayIndex =
-    parseInt(
-        document.getElementById(
-            "awayTeam"
-        ).value
-    );
-
-    if(homeIndex === awayIndex){
-        alert("Wybierz dwa różne kluby!");
-        return;
-    }
-
-    const hg =
-    parseInt(
-        document.getElementById(
-            "homeGoals"
-        ).value
-    );
-
-    const ag =
-    parseInt(
-        document.getElementById(
-            "awayGoals"
-        ).value
-    );
-
-    const home =
-    teams[homeIndex];
-
-    const away =
-    teams[awayIndex];
-
-    home.played++;
-    away.played++;
-
-    home.gf += hg;
-    home.ga += ag;
-
-    away.gf += ag;
-    away.ga += hg;
-
-    if(hg > ag){
-
-        home.won++;
-        away.lost++;
-        home.points += 3;
-
-    }else if(hg < ag){
-
-        away.won++;
-        home.lost++;
-        away.points += 3;
-
-    }else{
-
-        home.draw++;
-        away.draw++;
-
-        home.points += 1;
-        away.points += 1;
-    }
-
-    document.getElementById(
-        "matchList"
-    ).innerHTML +=
-    `<li>⚽ ${home.name} ${hg}:${ag} ${away.name}</li>`;
-
-    updateTable();
-}
-
-function updateTable(){
-
-    teams.sort((a,b)=>
-
-        b.points - a.points ||
-
-        (b.gf - b.ga) -
-        (a.gf - a.ga) ||
-
-        b.gf - a.gf
-    );
-
-    const tbody =
-    document.getElementById(
-        "leagueTable"
-    );
-
-    tbody.innerHTML = "";
-
-    teams.forEach((team,index)=>{
-
-        tbody.innerHTML += `
-        <tr>
-            <td>${index+1}</td>
-            <td>${team.name}</td>
-            <td>${team.played}</td>
-            <td>${team.won}</td>
-            <td>${team.draw}</td>
-            <td>${team.lost}</td>
-            <td>${team.gf}</td>
-            <td>${team.ga}</td>
-            <td>${team.gf-team.ga}</td>
-            <td><strong>${team.points}</strong></td>
-        </tr>
-        `;
-    });
-
-    updateSelects();
-}
-
-function saveTableAsPNG(){
-
-    html2canvas(
-        document.getElementById(
-            "tableContainer"
-        ),
-        {
-            scale:2,
-            backgroundColor:"#ffffff"
-        }
-    ).then(canvas=>{
-
-        const link =
-        document.createElement("a");
-
-        link.download =
-        document.title.replaceAll(" ","_")
-        + "_Tabela.png";
-
-        link.href =
-        canvas.toDataURL(
-            "image/png"
-        );
-
-        link.click();
-    });
-}
-
 </script>
 
 </body>
 </html>
-```
