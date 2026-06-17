@@ -81,33 +81,9 @@ a.button:hover{
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔧 TWOJA KONFIGURACJA
-const firebaseConfig = {
-  apiKey: "AIzaSyCCAi0uJeOCv9TDz2vEaX4GM07aeXiq41o",
-  authDomain: "liga-polskich-klubow.firebaseapp.com",
-  projectId: "liga-polskich-klubow",
-  storageBucket: "liga-polskich-klubow.firebasestorage.app",
-  messagingSenderId: "144909575974",
-  appId: "1:144909575974:web:1d4d79b565ba9f3ffec3e7",
-  measurementId: "G-GRRGK4GRQJ"
-};
-
-// init
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 📦 przykładowa kolekcja (np. drużyny)
-const teamsRef = collection(db, "teams");
-
-// 📡 test połączenia z bazą
-async function checkDB(){
-  const snap = await getDocs(teamsRef);
-
-  document.getElementById("status").innerText =
-    "🔥 Baza działa! Liczba drużyn: " + snap.size;
-}
-
-checkDB();
+<script type="module">
+import { teamsRef, matchesRef } from "./firebase.js";
+</script>
 </script>
 
 </body>
