@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liga Polskich Klubów</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>Tabela - Liga</title>
 
 <style>
 body{
@@ -13,170 +11,140 @@ body{
     background:#e5e7eb;
     padding:20px;
 }
-.container{max-width:1200px;margin:auto;}
-h1{text-align:center;background:#2563eb;color:#fff;padding:20px;border-radius:15px;}
-.card{background:#fff;padding:20px;border-radius:15px;margin-top:20px;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:1px solid #ccc;padding:8px;text-align:center;}
-th{background:#2563eb;color:#fff;}
-button{padding:8px 12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    background:#2563eb;
+    color:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
-<h1>🏆 Liga Polskich Klubów</h1>
+<h1>📊 Tabela Ligowa</h1>
 
 <div class="card">
-<h2>Dodaj klub</h2>
-<input id="teamName" placeholder="Nazwa klubu">
-<button onclick="addTeam()">Dodaj</button>
-</div>
 
-<div class="card">
-<h2>Mecze</h2>
-
-<select id="homeTeam"></select>
-<input id="homeGoals" type="number" value="0">
-vs
-<input id="awayGoals" type="number" value="0">
-<select id="awayTeam"></select>
-
-<button onclick="addMatch()">Zapisz mecz</button>
-
-<ul id="matchList"></ul>
-</div>
-
-<div class="card">
-<h2>Tabela</h2>
 <table>
 <thead>
 <tr>
-<th>#</th><th>Klub</th><th>M</th><th>W</th><th>R</th><th>P</th><th>BR+</th><th>BR-</th><th>PKT</th>
+<th>#</th>
+<th>Drużyna</th>
+<th>M</th>
+<th>Z</th>
+<th>R</th>
+<th>P</th>
+<th>BR+</th>
+<th>BR-</th>
+<th>PKT</th>
 </tr>
 </thead>
-<tbody id="table"></tbody>
+
+<tbody id="tableBody"></tbody>
+
 </table>
-</div>
 
 </div>
 
+</div>
+
+<!-- 🔥 FIREBASE -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-getFirestore,
-collection,
-addDoc,
-onSnapshot,
-deleteDoc,
-doc
+  getFirestore,
+  collection,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// 🔥 TWOJA KONFIGURACJA
 const firebaseConfig = {
-apiKey: "AIzaSyCCAi0uJeOCv9TDz2vEaX4GM07aeXiq41o",
-authDomain: "liga-polskich-klubow.firebaseapp.com",
-projectId: "liga-polskich-klubow",
-storageBucket: "liga-polskich-klubow.firebasestorage.app",
-messagingSenderId: "144909575974",
-appId: "1:144909575974:web:1d4d79b565ba9f3ffec3e7"
+  apiKey: "AIzaSyCCAi0uJeOCv9TDz2vEaX4GM07aeXiq41o",
+  authDomain: "liga-polskich-klubow.firebaseapp.com",
+  projectId: "liga-polskich-klubow",
+  storageBucket: "liga-polskich-klubow.firebasestorage.app",
+  messagingSenderId: "144909575974",
+  appId: "1:144909575974:web:1d4d79b565ba9f3ffec3e7"
 };
 
+// INIT
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const teamsRef = collection(db,"teams");
-const matchesRef = collection(db,"matches");
+// 📦 kolekcja
+const teamsRef = collection(db, "teams");
 
-let teams = [];
-
-/* 🔵 DODAWANIE KLUBU */
-window.addTeam = async function(){
-const name = document.getElementById("teamName").value;
-if(!name) return;
-
-await addDoc(teamsRef,{
-name,played:0,won:0,draw:0,lost:0,gf:0,ga:0,points:0
-});
-}
-
-/* 🔵 LIVE KLUBY */
+// 📊 LIVE TABELA
 onSnapshot(teamsRef,(snap)=>{
-teams=[];
-snap.forEach(d=>{
-teams.push({id:d.id,...d.data()});
+
+    let teams = [];
+
+    snap.forEach(doc=>{
+        teams.push(doc.data());
+    });
+
+    // sortowanie (punkty, różnica bramek)
+    teams.sort((a,b)=>
+        b.points - a.points ||
+        (b.gf - b.ga) - (a.gf - a.ga)
+    );
+
+    const table = document.getElementById("tableBody");
+    table.innerHTML = "";
+
+    teams.forEach((t,index)=>{
+        table.innerHTML += `
+        <tr>
+            <td>${index+1}</td>
+            <td>${t.name}</td>
+            <td>${t.played}</td>
+            <td>${t.won}</td>
+            <td>${t.draw}</td>
+            <td>${t.lost}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td><b>${t.points}</b></td>
+        </tr>
+        `;
+    });
+
 });
-
-updateSelects();
-updateTable();
-});
-
-/* 🔵 SELECTY */
-function updateSelects(){
-const h=document.getElementById("homeTeam");
-const a=document.getElementById("awayTeam");
-
-h.innerHTML="";
-a.innerHTML="";
-
-teams.forEach((t,i)=>{
-h.innerHTML+=`<option value="${i}">${t.name}</option>`;
-a.innerHTML+=`<option value="${i}">${t.name}</option>`;
-});
-}
-
-/* 🔵 MECZ */
-window.addMatch = async function(){
-
-const h = parseInt(document.getElementById("homeTeam").value);
-const a = parseInt(document.getElementById("awayTeam").value);
-
-const hg = parseInt(document.getElementById("homeGoals").value);
-const ag = parseInt(document.getElementById("awayGoals").value);
-
-await addDoc(matchesRef,{
-home:teams[h].name,
-away:teams[a].name,
-hg,ag
-});
-}
-
-/* 🔵 LIVE MECZE */
-onSnapshot(matchesRef,(snap)=>{
-const list=document.getElementById("matchList");
-list.innerHTML="";
-
-snap.forEach(d=>{
-const m=d.data();
-list.innerHTML+=`<li>⚽ ${m.home} ${m.hg}:${m.ag} ${m.away}</li>`;
-});
-});
-
-/* 🔵 TABELA LOKALNA */
-function updateTable(){
-
-let table={};
-
-teams.forEach(t=>{
-table[t.name]={...t};
-});
-
-document.getElementById("table").innerHTML=
-teams.map((t,i)=>`
-<tr>
-<td>${i+1}</td>
-<td>${t.name}</td>
-<td>${t.played}</td>
-<td>${t.won}</td>
-<td>${t.draw}</td>
-<td>${t.lost}</td>
-<td>${t.gf}</td>
-<td>${t.ga}</td>
-<td>${t.points}</td>
-</tr>
-`).join("");
-}
 
 </script>
 
