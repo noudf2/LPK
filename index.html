@@ -18,72 +18,169 @@ body{
 
 .container{
     text-align:center;
+    width:100%;
+    max-width:700px;
 }
 
 h1{
     color:white;
     font-size:42px;
-    margin-bottom:30px;
+    margin-bottom:20px;
 }
 
 .menu{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:20px;
+    gap:15px;
+    margin-bottom:25px;
 }
 
-a.button{
+a.button, button.button{
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:25px;
+    padding:20px;
     background:white;
     color:#1e3a8a;
     text-decoration:none;
     font-weight:bold;
-    font-size:18px;
+    font-size:16px;
     border-radius:15px;
     transition:0.3s;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    border:none;
+    cursor:pointer;
 }
 
-a.button:hover{
+a.button:hover, button.button:hover{
     transform:scale(1.05);
     background:#e0e7ff;
 }
 
+#panel{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-top:15px;
+    display:none;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
 #status{
-    margin-top:20px;
+    margin-top:15px;
     color:white;
     font-size:14px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>⚽ Liga Manager</h1>
+<h1>⚽ Liga Manager</h1>
 
-    <div class="menu">
-        <a class="button" href="kalendarz.html">📅 Kalendarz</a>
-        <a class="button" href="tabela.html">📊 Tabela</a>
-        <a class="button" href="social.html">📱 Social Media</a>
-        <a class="button" href="sponsorzy.html">🤝 Sponsorzy</a>
-    </div>
+<!-- MENU -->
+<div class="menu">
 
-    <div id="status">Łączenie z bazą...</div>
+<a class="button" href="tabela.html">📊 Tabela</a>
+<a class="button" href="kalendarz.html">📅 Kalendarz</a>
+
+<a class="button" href="social.html">📱 Social</a>
+<a class="button" href="sponsorzy.html">🤝 Sponsorzy</a>
+
+</div>
+
+<!-- 🔥 PRZYCISK -->
+<button class="button" onclick="togglePanel()">
+➕ Stwórz klub
+</button>
+
+<!-- PANEL -->
+<div id="panel">
+
+<h3>Nowy klub</h3>
+
+<input id="teamName" placeholder="Nazwa klubu">
+
+<button class="button" onclick="addTeam()">
+💾 Zapisz klub
+</button>
+
+</div>
+
+<div id="status">Łączenie z bazą...</div>
 
 </div>
 
 <!-- 🔥 FIREBASE -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script type="module">
-import { teamsRef, matchesRef } from "./firebase.js";
-</script>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+getFirestore,
+collection,
+addDoc,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔥 KONFIGURACJA
+const firebaseConfig = {
+apiKey: "AIzaSyCCAi0uJeOCv9TDz2vEaX4GM07aeXiq41o",
+authDomain: "liga-polskich-klubow.firebaseapp.com",
+projectId: "liga-polskich-klubow",
+storageBucket: "liga-polskich-klubow.firebasestorage.app",
+messagingSenderId: "144909575974",
+appId: "1:144909575974:web:1d4d79b565ba9f3ffec3e7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const teamsRef = collection(db, "teams");
+
+// 📦 panel
+window.togglePanel = function(){
+const p = document.getElementById("panel");
+p.style.display = p.style.display === "block" ? "none" : "block";
+}
+
+// ➕ dodaj klub
+window.addTeam = async function(){
+
+const name = document.getElementById("teamName").value.trim();
+
+if(!name) return;
+
+await addDoc(teamsRef,{
+name,
+played:0,
+won:0,
+draw:0,
+lost:0,
+gf:0,
+ga:0,
+points:0
+});
+
+document.getElementById("teamName").value = "";
+
+document.getElementById("status").innerText =
+"✔ Klub dodany do bazy!";
+}
+
+// 📡 test połączenia
+onSnapshot(teamsRef,(snap)=>{
+document.getElementById("status").innerText =
+"🔥 Baza działa! Kluby: " + snap.size;
+});
+
 </script>
 
 </body>
